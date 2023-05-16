@@ -6,6 +6,7 @@ import { Destination } from "./entity/destination.entity";
 import { CreateDestinationType } from "./types/create-destination.type";
 import { Additional } from "../additional/entity/additional.entity";
 import { log } from "console";
+import { User } from "../users/entity/user.entity";
 
 @Injectable()
 export class DestinationService {
@@ -18,14 +19,20 @@ export class DestinationService {
     return await this.destinationRepository.getDestinations(filter);
   }
 
+  async getMyDestinationByUserId(user: User): Promise<Destination[]> {
+    return await this.destinationRepository.getMyDestinationByUserId(user);
+  }
+
   async getNewDestinations(): Promise<Destination[]> {
     return await this.destinationRepository.getNewDestinations();
   }
 
   async createDestination(
+    user,
     createDestinationType: CreateDestinationType
   ): Promise<void> {
     return await this.destinationRepository.createDestination(
+      user,
       createDestinationType
     );
   }

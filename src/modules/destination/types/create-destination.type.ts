@@ -1,13 +1,12 @@
 /* eslint-disable prettier/prettier */
-import { Column, PrimaryGeneratedColumn } from "typeorm";
+
+import { IsNotEmpty } from "class-validator";
 
 export class CreateDestinationType {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
 
-  @Column()
+  @IsNotEmpty()
   name: string;
 
-  @Column()
+  @IsNotEmpty()
   category: string;
 }

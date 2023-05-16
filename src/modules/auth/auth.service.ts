@@ -99,4 +99,21 @@ export class AuthService {
 
     return refresh_token;
   }
+
+  async revokeRefreshToken(id: string): Promise<void> {
+    const refreshToken = await this.refreshTokenRepository.findOne(id);
+
+    if (!refreshToken) {
+      throw new UnauthorizedException("Refresh token not found");
+    }
+
+    refreshToken.isRevoked = true;
+    await refreshToken.save();
+  }
+
+  async getUserById(id: string): Promise<User> {
+    return User.findOne({
+      where: { id },
+    });
+  }
 }

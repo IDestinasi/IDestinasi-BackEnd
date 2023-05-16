@@ -3,6 +3,7 @@ import { Destination } from "../entity/destination.entity";
 import { FilterDestinationType } from "../types/filter-destination.type";
 import { InternalServerErrorException } from "@nestjs/common";
 import { CreateDestinationType } from "../types/create-destination.type";
+import { User } from "src/modules/users/entity/user.entity";
 
 @EntityRepository(Destination)
 export class DestinationRepository extends Repository<Destination> {
@@ -26,6 +27,20 @@ export class DestinationRepository extends Repository<Destination> {
     return await query.getMany();
   }
 
+  async getMyDestinationByUserId(user: User): Promise<Destination[]> {
+    // convert user.id to string
+    const query = this.createQueryBuilder("destination").where(
+      "destination.userId = :userId",
+      { userId: user.id }
+    );
+    // beritahu jika query tidak ada data
+    const data = await query.getMany();
+    if (!data) {
+      throw new InternalServerErrorException("You have no destination");
+    }
+    return data;
+  }
+
   async getNewDestinations(): Promise<Destination[]> {
     const query = this.createQueryBuilder("destination");
     query.orderBy("destination.createdAt", "DESC");
@@ -34,6 +49,7 @@ export class DestinationRepository extends Repository<Destination> {
   }
 
   async createDestination(
+    user: User,
     createDestinationType: CreateDestinationType
   ): Promise<void> {
     const { name, category } = createDestinationType;
@@ -41,6 +57,7 @@ export class DestinationRepository extends Repository<Destination> {
     const destination = this.create();
     destination.name = name;
     destination.category = category;
+    destination.user = user;
 
     try {
       await destination.save();

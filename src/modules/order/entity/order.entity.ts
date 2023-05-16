@@ -4,32 +4,21 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 
 @Entity()
-export class Additional extends BaseEntity {
+export class Order extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
-  name: string;
-
-  @Column()
-  category: string;
-
-  @Column()
   qty: number;
 
-  @Column()
-  price: number;
-
-  @ManyToOne(() => Destination, (destination) => destination.additional)
+  @ManyToOne(() => Destination, (destination) => destination.order)
   destination: Destination;
 
-  empty: any;
-  available: any;
+  @ManyToOne(() => User, (user) => user.order)
+  user: User;
 }
