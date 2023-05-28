@@ -4,6 +4,7 @@ import { CreateOrderType } from "../types/create-order.type";
 import { OrderDestination } from "../entity/order-destination.entity";
 import { User } from "src/modules/users/entity/user.entity";
 import { ListOrderDestinations } from "../types/list-order-destinations.type";
+import { HttpStatus } from "@nestjs/common";
 
 @EntityRepository(OrderDestination)
 export class OrderDestinationRepository extends Repository<OrderDestination> {
@@ -88,11 +89,17 @@ export class OrderDestinationRepository extends Repository<OrderDestination> {
     }
   }
 
-  async updateStatusOrderDestination(id: string): Promise<void> {
+  async updateStatusOrderDestination(id: string): Promise<any> {
     const orderDestination = await this.findOne(id);
 
-    orderDestination.status = status;
+    console.log(orderDestination);
 
-    await orderDestination.save();
+    if (orderDestination.status == "paid") {
+      orderDestination.status = "visited";
+      await orderDestination.save();
+      return "Selamat Anda Boleh Masuk";
+    } else {
+      return "Anda Dilarang Masuk";
+    }
   }
 }

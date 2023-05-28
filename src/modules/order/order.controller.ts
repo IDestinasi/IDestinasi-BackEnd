@@ -35,7 +35,7 @@ export class OrderController {
     return this.orderService.updatePaymentOrderDestination(status);
   }
 
-  @Get("order/scan/:id")
+  @Get("scan/:id")
   async getScanOrder(@Body() id: any) {
     return this.orderService.getScanOrder(id);
   }
