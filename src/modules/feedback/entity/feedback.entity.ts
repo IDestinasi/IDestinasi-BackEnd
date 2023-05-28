@@ -15,10 +15,16 @@ export class Feedback extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   rating: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   message: string;
 
   @ManyToOne(() => Destination, (destination) => destination.review)

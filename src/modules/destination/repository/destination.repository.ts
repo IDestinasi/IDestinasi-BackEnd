@@ -52,7 +52,7 @@ export class DestinationRepository extends Repository<Destination> {
     user: User,
     createDestinationType: CreateDestinationType
   ): Promise<Destination> {
-    const { name, category, price } = createDestinationType;
+    const { name, category, price, description } = createDestinationType;
 
     const destination = this.create();
     console.log(createDestinationType.uuid);
@@ -62,6 +62,7 @@ export class DestinationRepository extends Repository<Destination> {
     destination.user = user;
     destination.createdAt = new Date();
     destination.price = price;
+    destination.description = description;
 
     try {
       await destination.save();

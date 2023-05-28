@@ -19,7 +19,10 @@ export class OrderDestination extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   qty: number;
 
   @ManyToOne(() => Destination, (destination) => destination.orderDestination, {
@@ -30,25 +33,46 @@ export class OrderDestination extends BaseEntity {
   @ManyToOne(() => User, (user) => user.orderDestination)
   user: User;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   visitingDate: Date;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   payment: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   total: number;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   token: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   va_number: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   status: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   merchantId: string;
 
   @OneToMany(() => Feedback, (feedback) => feedback.orderDestination)

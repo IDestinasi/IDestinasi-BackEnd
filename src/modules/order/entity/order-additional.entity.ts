@@ -13,13 +13,22 @@ export class OrderAdditonal extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   qty: number;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   payment: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+    default: null,
+  })
   order_id: string;
 
   @ManyToOne(() => User, (user) => user.orderAdditonal)

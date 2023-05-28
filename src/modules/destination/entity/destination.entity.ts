@@ -19,29 +19,34 @@ export class Destination extends BaseEntity {
   @PrimaryColumn('uuid')
   id: string;
 
-  @Column()
-  name: string;
-
-  @Column()
-  description: string;
-
-  @Column()
-  operation: string;
-
-  @Column()
-  city: string;
-
-  @Column()
-  address: string;
-  
-  @Column()
-  price: number;
-
-  @Column()
-  category: string;
+  @Column({
+    nullable: true,
+    default: null,
+  })  name: string;
 
   @Column({
-    nullable: true
+    nullable: true,
+    default: null,
+  })  description: string;
+
+  @Column({
+    nullable: true,
+    default: null,
+  })  city: string;
+  
+  @Column({
+    nullable: true,
+    default: null,
+  })  price: number;
+
+  @Column({
+    nullable: true,
+    default: null,
+  })  category: string;
+
+  @Column({
+    nullable: true,
+    default: null,
   })
   createdAt: Date;
 
