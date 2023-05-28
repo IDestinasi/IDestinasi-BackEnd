@@ -6,6 +6,10 @@ import { UsersModule } from "./modules/users/users.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { AdditionalModule } from "./modules/additional/additional.module";
 import { OrderModule } from "./modules/order/order.module";
+import { PaymentModule } from "./modules/payment/payment.module";
+import { ConfigModule } from "@nestjs/config";
+import { FeedbackController } from "./modules/feedback/feedback.controller";
+import { FeedbackModule } from "./modules/feedback/feedback.module";
 
 @Module({
   imports: [
@@ -15,6 +19,12 @@ import { OrderModule } from "./modules/order/order.module";
     AuthModule,
     AdditionalModule,
     OrderModule,
+    PaymentModule,
+    FeedbackModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    FeedbackModule,
   ],
 })
 export class AppModule {}

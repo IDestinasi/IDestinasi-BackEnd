@@ -1,10 +1,13 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards, Get } from "@nestjs/common";
 import { CreateOrderType } from "./types/create-order.type";
 import { SuccessResponse } from "src/interface/success-response.interface";
 import { OrderService } from "./order.service";
 import { GetUser } from "../auth/get-user.decorator";
 import { User } from "../users/entity/user.entity";
 import { JwtGuard } from "src/guards/jwt.guard";
+import { OrderDestination } from "./entity/order-destination.entity";
+import { Destination } from "../destination/entity/destination.entity";
+import { ListOrderDestinations } from "./types/list-order-destinations.type";
 
 @Controller("order")
 @UseGuards(JwtGuard)
@@ -15,7 +18,14 @@ export class OrderController {
   async createOrder(
     @Body() createOrderType: CreateOrderType,
     @GetUser() user: User
-  ): Promise<void> {
-    return this.orderService.createOrder(createOrderType, user);
+  ): Promise<OrderDestination> {
+    return this.orderService.createOrderDestination(createOrderType, user);
+  }
+
+  @Get("destination")
+  async MyDestinationOrder(
+    @GetUser() user: User
+  ): Promise<ListOrderDestinations> {
+    return this.orderService.getMyDestinationOrder(user);
   }
 }

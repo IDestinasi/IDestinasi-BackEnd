@@ -18,6 +18,6 @@ export class RefreshToken extends BaseEntity {
   @Column()
   expiredAt: Date;
 
-  @ManyToOne(() => User, (user) => user.refreshToken)
-  user: User;
+  // @ManyToOne(() => User, (user) => user.refreshToken)
+  // user: User;
 }

@@ -9,4 +9,11 @@ export class CreateDestinationType {
 
   @IsNotEmpty()
   category: string;
+
+  @IsNotEmpty()
+  price: number;
+
+  @IsNotEmpty()
+  description: string;
+
 }

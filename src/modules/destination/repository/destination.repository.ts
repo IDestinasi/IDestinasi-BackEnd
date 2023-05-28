@@ -52,12 +52,14 @@ export class DestinationRepository extends Repository<Destination> {
     user: User,
     createDestinationType: CreateDestinationType
   ): Promise<void> {
-    const { name, category } = createDestinationType;
+    const { name, category, price } = createDestinationType;
 
     const destination = this.create();
     destination.name = name;
     destination.category = category;
     destination.user = user;
+    destination.createdAt = new Date();
+    destination.price = price;
 
     try {
       await destination.save();

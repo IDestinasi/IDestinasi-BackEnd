@@ -7,6 +7,7 @@ import { CreateDestinationType } from "./types/create-destination.type";
 import { Additional } from "../additional/entity/additional.entity";
 import { log } from "console";
 import { User } from "../users/entity/user.entity";
+import path from "path";
 
 @Injectable()
 export class DestinationService {

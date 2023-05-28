@@ -5,6 +5,7 @@ import {
   Post,
   UseGuards,
   Patch,
+  Get,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LoginType } from "./types/login.type";
@@ -21,16 +22,22 @@ export class AuthController {
     return this.authService.login(loginType);
   }
 
-  @Post("/refresh-token")
-  async refreshToken(
-    @Body() refreshTokenType: RefreshAccessTokenType
-  ): Promise<{ access_token: string }> {
-    return this.authService.refreshAccessToken(refreshTokenType);
+  @Get("/check")
+  @UseGuards(JwtGuard)
+  async check(): Promise<{ message: string }> {
+    return { message: "success" };
   }
 
-  @Patch("/:id/revoke")
-  @UseGuards(JwtGuard)
-  async revokeRefreshToken(@Param("id") id: string): Promise<void> {
-    return this.authService.revokeRefreshToken(id);
-  }
+  // @Post("/refresh-token")
+  // async refreshToken(
+  //   @Body() refreshTokenType: RefreshAccessTokenType
+  // ): Promise<{ access_token: string }> {
+  //   return this.authService.refreshAccessToken(refreshTokenType);
+  // }
+
+  // @Patch("/:id/revoke")
+  // @UseGuards(JwtGuard)
+  // async revokeRefreshToken(@Param("id") id: string): Promise<void> {
+  //   return this.authService.revokeRefreshToken(id);
+  // }
 }

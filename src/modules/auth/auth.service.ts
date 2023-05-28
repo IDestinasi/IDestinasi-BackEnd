@@ -5,7 +5,7 @@ import { LoginResponse } from "./interface/login-response.interface";
 import { UsersService } from "../users/users.service";
 import { User } from "../users/entity/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RefreshTokenRepository } from "./repository/refresh-token.repository";
+// import { RefreshTokenRepository } from "./repository/refresh-token.repository";
 import { refreshTokenConfig } from "src/config/jwt.config";
 import { RefreshToken } from "./entity/refresh-token.entity";
 import { RefreshAccessTokenType } from "./types/refresh-access-token.type";
@@ -15,9 +15,7 @@ import { TokenExpiredError } from "jsonwebtoken";
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly userService: UsersService,
-    @InjectRepository(RefreshTokenRepository)
-    private readonly refreshTokenRepository: RefreshTokenRepository
+    private readonly userService: UsersService // @InjectRepository(RefreshTokenRepository) // private readonly refreshTokenRepository: RefreshTokenRepository
   ) {}
 
   async login(loginType: LoginType): Promise<LoginResponse> {
@@ -30,35 +28,35 @@ export class AuthService {
 
     const access_token = await this.createAccessToken(userService);
 
-    const refresh_token = await this.createRefreshToken(userService);
+    // const refresh_token = await this.createRefreshToken(userService);
 
-    return { access_token, refresh_token } as LoginResponse;
+    return { access_token } as LoginResponse;
   }
 
-  async refreshAccessToken(
-    refreshTokenType: RefreshAccessTokenType
-  ): Promise<{ access_token: string }> {
-    const { refresh_token } = refreshTokenType;
+  // async refreshAccessToken(
+  //   refreshTokenType: RefreshAccessTokenType
+  // ): Promise<{ access_token: string }> {
+  //   const { refresh_token } = refreshTokenType;
 
-    const payload = await this.decodeToken(refresh_token);
+  //   const payload = await this.decodeToken(refresh_token);
 
-    const refreshToken = await this.refreshTokenRepository.findOne(
-      payload.jid,
-      { relations: ["user"] }
-    );
+  //   const refreshToken = await this.refreshTokenRepository.findOne(
+  //     payload.jid,
+  //     { relations: ["user"] }
+  //   );
 
-    if (!refreshToken) {
-      throw new UnauthorizedException("Refresh token not found");
-    }
+  //   if (!refreshToken) {
+  //     throw new UnauthorizedException("Refresh token not found");
+  //   }
 
-    if (refreshToken.isRevoked) {
-      throw new UnauthorizedException("Refresh token revoked");
-    }
+  //   if (refreshToken.isRevoked) {
+  //     throw new UnauthorizedException("Refresh token revoked");
+  //   }
 
-    const access_token = await this.createAccessToken(refreshToken.user);
+  //   const access_token = await this.createAccessToken(refreshToken.user);
 
-    return { access_token };
-  }
+  //   return { access_token };
+  // }
 
   async decodeToken(token: string): Promise<any> {
     try {
@@ -82,34 +80,34 @@ export class AuthService {
     return access_token;
   }
 
-  async createRefreshToken(user: User): Promise<string> {
-    const refreshToken = await this.refreshTokenRepository.createRefreshToken(
-      user,
-      +refreshTokenConfig.expiresIn
-    );
+  // async createRefreshToken(user: User): Promise<string> {
+  //   const refreshToken = await this.refreshTokenRepository.createRefreshToken(
+  //     user,
+  //     +refreshTokenConfig.expiresIn
+  //   );
 
-    const payload = {
-      jid: refreshToken.id,
-    };
+  //   const payload = {
+  //     jid: refreshToken.id,
+  //   };
 
-    const refresh_token = await this.jwtService.signAsync(
-      payload,
-      refreshTokenConfig
-    );
+  //   const refresh_token = await this.jwtService.signAsync(
+  //     payload,
+  //     refreshTokenConfig
+  //   );
 
-    return refresh_token;
-  }
+  //   return refresh_token;
+  // }
 
-  async revokeRefreshToken(id: string): Promise<void> {
-    const refreshToken = await this.refreshTokenRepository.findOne(id);
+  // async revokeRefreshToken(id: string): Promise<void> {
+  //   const refreshToken = await this.refreshTokenRepository.findOne(id);
 
-    if (!refreshToken) {
-      throw new UnauthorizedException("Refresh token not found");
-    }
+  //   if (!refreshToken) {
+  //     throw new UnauthorizedException("Refresh token not found");
+  //   }
 
-    refreshToken.isRevoked = true;
-    await refreshToken.save();
-  }
+  //   refreshToken.isRevoked = true;
+  //   await refreshToken.save();
+  // }
 
   async getUserById(id: string): Promise<User> {
     return User.findOne({

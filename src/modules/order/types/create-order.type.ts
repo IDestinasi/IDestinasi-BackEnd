@@ -1,4 +1,6 @@
 import { IsNotEmpty, IsOptional } from "class-validator";
+import { Additional } from "src/modules/additional/entity/additional.entity";
+import { Destination } from "src/modules/destination/entity/destination.entity";
 
 export class CreateOrderType {
   @IsNotEmpty()
@@ -10,6 +12,12 @@ export class CreateOrderType {
   @IsNotEmpty()
   visitingDate: Date;
 
+  @IsNotEmpty()
+  payment: string;
+
   @IsOptional()
-  additional: any[];
+  total: number;
+
+  @IsOptional()
+  token: string;
 }
