@@ -55,6 +55,8 @@ export class DestinationRepository extends Repository<Destination> {
     const { name, category, price } = createDestinationType;
 
     const destination = this.create();
+    console.log(createDestinationType.uuid);
+    destination.id = createDestinationType.uuid;
     destination.name = name;
     destination.category = category;
     destination.user = user;

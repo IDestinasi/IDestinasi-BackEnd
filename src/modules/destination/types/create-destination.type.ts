@@ -4,6 +4,8 @@ import { IsNotEmpty } from "class-validator";
 
 export class CreateDestinationType {
 
+  uuid: string;
+
   @IsNotEmpty()
   name: string;
 

@@ -48,6 +48,9 @@ export class OrderDestination extends BaseEntity {
   @Column()
   status: string;
 
+  @Column()
+  merchantId: string;
+
   @OneToMany(() => Feedback, (feedback) => feedback.orderDestination)
   feedback: Feedback;
 }

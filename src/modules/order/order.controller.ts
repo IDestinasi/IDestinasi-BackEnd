@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards, Get } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards, Get, Put } from "@nestjs/common";
 import { CreateOrderType } from "./types/create-order.type";
 import { SuccessResponse } from "src/interface/success-response.interface";
 import { OrderService } from "./order.service";
@@ -10,11 +10,11 @@ import { Destination } from "../destination/entity/destination.entity";
 import { ListOrderDestinations } from "./types/list-order-destinations.type";
 
 @Controller("order")
-@UseGuards(JwtGuard)
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
+  @UseGuards(JwtGuard)
   async createOrder(
     @Body() createOrderType: CreateOrderType,
     @GetUser() user: User
@@ -23,9 +23,15 @@ export class OrderController {
   }
 
   @Get("destination")
+  @UseGuards(JwtGuard)
   async MyDestinationOrder(
     @GetUser() user: User
   ): Promise<ListOrderDestinations> {
     return this.orderService.getMyDestinationOrder(user);
+  }
+
+  @Put("payment")
+  async UpdatePaymentOrderDestination(@Body() status: any) {
+    return this.orderService.updatePaymentOrderDestination(status);
   }
 }

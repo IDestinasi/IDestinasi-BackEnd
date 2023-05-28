@@ -50,7 +50,7 @@ export class OrderService {
 
     createOrderType.total = destination.price * createOrderType.qty;
 
-    const va_number: string = await this.paymentService.paymentHandler(
+    const transaction: string = await this.paymentService.paymentHandler(
       createOrderType,
       user,
       destination
@@ -60,11 +60,17 @@ export class OrderService {
       createOrderType,
       user,
       destination,
-      va_number
+      transaction
     );
   }
 
   async getMyDestinationOrder(user: User): Promise<ListOrderDestinations> {
     return await this.orderDestinationRepository.getMyDestinationOrder(user);
+  }
+
+  async updatePaymentOrderDestination(status: any) {
+    return await this.orderDestinationRepository.updatePaymentOrderDestination(
+      status
+    );
   }
 }

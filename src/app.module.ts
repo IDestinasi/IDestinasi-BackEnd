@@ -10,6 +10,7 @@ import { PaymentModule } from "./modules/payment/payment.module";
 import { ConfigModule } from "@nestjs/config";
 import { FeedbackController } from "./modules/feedback/feedback.controller";
 import { FeedbackModule } from "./modules/feedback/feedback.module";
+import { MulterModule } from "@nestjs/platform-express";
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { FeedbackModule } from "./modules/feedback/feedback.module";
     OrderModule,
     PaymentModule,
     FeedbackModule,
+    MulterModule.register({ dest: "../public/" }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),

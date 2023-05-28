@@ -11,7 +11,7 @@ export class OrderDestinationRepository extends Repository<OrderDestination> {
     createOrderType: CreateOrderType,
     user: User,
     destination: Destination,
-    va_number: string
+    transaction: any
   ): Promise<OrderDestination> {
     const { idDestinasi, qty, visitingDate, payment, total, token } =
       createOrderType;
@@ -22,7 +22,7 @@ export class OrderDestinationRepository extends Repository<OrderDestination> {
     const userSearch = await User.findOne(user.id);
 
     const order = this.create();
-
+    console.log(transaction);
     order.qty = qty;
     order.destination = destination;
     order.user = userSearch;
@@ -30,7 +30,8 @@ export class OrderDestinationRepository extends Repository<OrderDestination> {
     order.payment = payment;
     order.total = total;
     order.token = token;
-    order.va_number = va_number;
+    order.va_number = transaction.va_number;
+    order.merchantId = transaction.merchantId;
     order.status = "unpaid";
 
     return await order.save();
@@ -71,5 +72,19 @@ export class OrderDestinationRepository extends Repository<OrderDestination> {
 
   async getOrderDestinationBy(id: string): Promise<OrderDestination> {
     return await this.findOne(id);
+  }
+
+  async updatePaymentOrderDestination({ status }: any): Promise<void> {
+    const query = this.createQueryBuilder("orderDestination");
+
+    query.where("orderDestination.token = :token", { token: status.order_id });
+
+    const orderDestination = await query.getOne();
+
+    if (orderDestination && status.merchant_id == orderDestination.merchantId) {
+      // update orderDestination.status to paid
+      orderDestination.status = "paid";
+      await orderDestination.save();
+    }
   }
 }

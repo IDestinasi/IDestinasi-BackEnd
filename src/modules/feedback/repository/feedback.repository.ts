@@ -19,7 +19,6 @@ export class FeedbackRepository extends Repository<Feedback> {
     const { rating, message } = reviewCreate;
 
     const orderDestination = await orderDestinationRepository.findOne(id);
-    
     const destination = await destinationRepository.findOne(
       orderDestination.destination.id
     );

@@ -12,7 +12,7 @@ export class PaymentService {
     createOrderType: CreateOrderType,
     user: User,
     destination: Destination
-  ): Promise<string> {
+  ): Promise<any> {
     // post to localhost:5000/payment
 
     // find destination by id
@@ -30,10 +30,18 @@ export class PaymentService {
       paymentType,
     });
 
+    const merchantId = response.data.data.merchant_id;
+
     if (paymentType.payment.toLowerCase() == "permata") {
-      return response.data.data.permata_va_number;
+      return {
+        va_number: response.data.data.permata_va_number,
+        merchantId,
+      };
     } else {
-      return response.data.data.va_numbers[0].va_number;
+      return {
+        va_number: response.data.data.va_numbers[0].va_number,
+        merchantId,
+      };
     }
   }
 }

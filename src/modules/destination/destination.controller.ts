@@ -23,20 +23,21 @@ import { JwtGuard } from "src/guards/jwt.guard";
 import { log } from "console";
 import { AdminRoleGuard } from "src/guards/admin.guard";
 import { Observable, of } from "rxjs";
-import path, { join } from "path";
+import path, { extname, join } from "path";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
+import { v4 as uuidv4 } from "uuid";
 
 @Controller("destination")
 export class DestinationController {
-  constructor(private destionationService: DestinationService) {}
+  constructor(private destinationService: DestinationService) {}
 
   @Get()
   @UseGuards(JwtGuard)
   async getDestinations(
     @Query() filter: FilterDestinationType
   ): Promise<Destination[]> {
-    return this.destionationService.getDestinations(filter);
+    return this.destinationService.getDestinations(filter);
   }
 
   @Get("my")
@@ -44,13 +45,13 @@ export class DestinationController {
   async getMyDestinationByUserId(
     @GetUser() user: User
   ): Promise<Destination[]> {
-    return await this.destionationService.getMyDestinationByUserId(user);
+    return await this.destinationService.getMyDestinationByUserId(user);
   }
 
   @Get("new")
   @UseGuards(JwtGuard)
   async getNewDestinations(): Promise<Destination[]> {
-    return this.destionationService.getNewDestinations();
+    return this.destinationService.getNewDestinations();
   }
 
   @Get("image/:id/:number")
@@ -72,7 +73,7 @@ export class DestinationController {
   @Get("/:id")
   @UseGuards(JwtGuard)
   async getDestinationById(@Param("id") id: string): Promise<Destination> {
-    return await this.destionationService.getDestinationById(id);
+    return await this.destinationService.getDestinationById(id);
   }
 
   @Post()
@@ -81,31 +82,29 @@ export class DestinationController {
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
-        destination: "../../../public/images/destinations",
+        destination: "./public/images/destinations",
         filename: (req, file, cb) => {
-          console.log(file);
-          cb(
-            null,
-            new Date().toISOString().replace(/:/g, "-") +
-              "-" +
-              file.originalname
-          );
+          req["destinationUuid"] = uuidv4(); // Simpan UUID destinasi di request object
+          const filename = `${req["destinationUuid"]}${extname(
+            file.originalname
+          )}`;
+          cb(null, filename);
         },
       }),
     })
   )
   async createDestination(
     @Body() createDestinationType: CreateDestinationType,
-    @Req() _req,
+    @Req() req: any, // Menggunakan tipe any pada parameter req
     @GetUser() user: User,
-    @UploadedFiles() file
-  ): Promise<Observable<any>> {
-    console.log(file);
-    return of({ imagePath: file.path });
-    // return this.destionationService.createDestination(
-    //   user,
-    //   createDestinationType
-    // );
+    @UploadedFile() file: Express.Multer.File
+  ): Promise<any> {
+    console.log("file", file);
+    createDestinationType.uuid = req["destinationUuid"]; // Gunakan UUID yang sama untuk destinasi
+    await this.destinationService.createDestination(
+      user,
+      createDestinationType
+    );
   }
 
   // @Get("/:id")
