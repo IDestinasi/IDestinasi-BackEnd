@@ -87,4 +87,12 @@ export class OrderDestinationRepository extends Repository<OrderDestination> {
       await orderDestination.save();
     }
   }
+
+  async updateStatusOrderDestination(id: string): Promise<void> {
+    const orderDestination = await this.findOne(id);
+
+    orderDestination.status = status;
+
+    await orderDestination.save();
+  }
 }

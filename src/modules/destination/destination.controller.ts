@@ -54,18 +54,11 @@ export class DestinationController {
     return this.destinationService.getNewDestinations();
   }
 
-  @Get("image/:id/:number")
-  findImageDestination(
-    @Param("id") idName,
-    @Param("number") number: number,
-    @Res() res
-  ): Observable<any> {
+  @Get("image/:id")
+  findImageDestination(@Param("id") idName, @Res() res): Observable<any> {
     return of(
       res.sendFile(
-        join(
-          process.cwd(),
-          "public/images/destinations/" + idName + "/" + number + ".jpg"
-        )
+        join(process.cwd(), "public/images/destinations/" + idName + ".jpg")
       )
     );
   }
@@ -77,17 +70,14 @@ export class DestinationController {
   }
 
   @Post()
-  @UseGuards(JwtGuard)
-  // @UseGuards(AdminRoleGuard)
+  @UseGuards(JwtGuard, AdminRoleGuard)
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
         destination: "./public/images/destinations",
         filename: (req, file, cb) => {
           req["destinationUuid"] = uuidv4(); // Simpan UUID destinasi di request object
-          const filename = `${req["destinationUuid"]}${extname(
-            file.originalname
-          )}`;
+          const filename = `${req["destinationUuid"]}.jpg`;
           cb(null, filename);
         },
       }),
@@ -98,10 +88,9 @@ export class DestinationController {
     @Req() req: any, // Menggunakan tipe any pada parameter req
     @GetUser() user: User,
     @UploadedFile() file: Express.Multer.File
-  ): Promise<any> {
-    console.log("file", file);
+  ): Promise<Destination> {
     createDestinationType.uuid = req["destinationUuid"]; // Gunakan UUID yang sama untuk destinasi
-    await this.destinationService.createDestination(
+    return await this.destinationService.createDestination(
       user,
       createDestinationType
     );

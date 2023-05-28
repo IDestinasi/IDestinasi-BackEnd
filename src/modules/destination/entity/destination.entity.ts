@@ -23,9 +23,6 @@ export class Destination extends BaseEntity {
   name: string;
 
   @Column()
-  picture: string;
-
-  @Column()
   description: string;
 
   @Column()
@@ -51,7 +48,9 @@ export class Destination extends BaseEntity {
   @OneToMany(() => Additional, (additional) => additional.destination)
   additional: Additional[];
 
-  @ManyToOne(() => User, (user) => user.destination)
+  @ManyToOne(() => User, (user) => user.destination, {
+    eager: true,
+  })
   user: User;
 
   @OneToMany(() => OrderDestination, (orderDestination) => orderDestination.destination)

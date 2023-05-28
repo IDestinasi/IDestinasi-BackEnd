@@ -31,7 +31,7 @@ export class DestinationService {
   async createDestination(
     user,
     createDestinationType: CreateDestinationType
-  ): Promise<void> {
+  ): Promise<Destination> {
     return await this.destinationRepository.createDestination(
       user,
       createDestinationType

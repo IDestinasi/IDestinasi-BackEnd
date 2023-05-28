@@ -51,7 +51,7 @@ export class DestinationRepository extends Repository<Destination> {
   async createDestination(
     user: User,
     createDestinationType: CreateDestinationType
-  ): Promise<void> {
+  ): Promise<Destination> {
     const { name, category, price } = createDestinationType;
 
     const destination = this.create();
@@ -65,6 +65,7 @@ export class DestinationRepository extends Repository<Destination> {
 
     try {
       await destination.save();
+      return destination;
     } catch (e) {
       throw new InternalServerErrorException(e);
     }

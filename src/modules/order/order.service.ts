@@ -73,4 +73,10 @@ export class OrderService {
       status
     );
   }
+
+  async getScanOrder(id: any) {
+    return await this.orderDestinationRepository.updateStatusOrderDestination(
+      id
+    );
+  }
 }
